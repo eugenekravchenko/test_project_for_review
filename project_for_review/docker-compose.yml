@@ -1,0 +1,43 @@
+version: '3.2'
+
+services:
+  db:
+    image: mysql:8.0
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--silent", "-pExample.password"]
+      interval: 5s
+      timeout: 10s
+      retries: 3
+    environment:
+      MYSQL_ROOT_PASSWORD: Example.password
+    networks:
+      - test_network
+
+  server:
+    image: ${DOCKER_REPOSITORY}/server:${SERVER_TAG}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/health"]
+      interval: 5s
+      timeout: 10s
+      retries: 3
+    environment:
+      DB_HOST: db
+      SPRING_PROFILES_ACTIVE: test
+    networks:
+      - test_network
+
+  site:
+    image: ${DOCKER_REPOSITORY}/site:${SITE_TAG}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 3
+    environment:
+      API_SERVER: http://server:8080
+    networks:
+      - test_network
+
+networks:
+  test_network:

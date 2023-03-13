@@ -1,0 +1,22 @@
+{
+  "name": "project_for_review",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts ./",
+    "report": "allure serve ./allure-results/",
+    "precondition": "mocha ./preconditions_scripts/index.precondition.ts",
+    "test": "./node_modules/.bin/protractor ./protractor.conf.js",
+    "webdriver-clean": "webdriver-manager clean",
+    "webdriver-start": "webdriver-manager start",
+    "webdriver-update": "webdriver-manager update"
+  },
+  "dependencies": {
+    "protractor": "^7.0.0",
+    "allure-mocha": "~1.0.0",
+    "mocha": "1.0.0"
+  },
+  "devDependencies": {
+    "allure-commandline": "1.0.0",
+    "eslint-plugin-mocha": "1.0.0"
+  }
+}
